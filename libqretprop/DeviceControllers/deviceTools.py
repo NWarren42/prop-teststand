@@ -284,8 +284,11 @@ def getSingle(device: ESPDevice) -> None:
             ml.slog(f"Sent GETS command to {device.name}")
         except Exception as e:
             ml.elog(f"Error sending GETS command to {device.name}: {e}")
+            _removed = deviceRegistry.pop(device.name)
+            ml.slog(f"{_removed.name} removed from registry")
     else:
         ml.elog(f"No socket available for {device.name} to send GETS command.")
+
 
 def startStreaming(device: ESPDevice,
                    Hz: int) -> None:
@@ -313,6 +316,8 @@ def startStreaming(device: ESPDevice,
 
         except Exception as e:
             ml.elog(f"Error sending '{command}' command to {device.name}: {e}")
+            _removed = deviceRegistry.pop(device.name)
+            ml.slog(f"{device.name} removed from registry")
     else:
         ml.elog(f"No socket available for {device.name} to send STRM command.")
 
@@ -328,6 +333,8 @@ def stopStreaming(device: ESPDevice) -> None:
             ml.slog(f"Sent STOP command to {device.name}")
         except Exception as e:
             ml.elog(f"Error sending STOP command to {device.name}: {e}")
+            _removed = deviceRegistry.pop(device.name)
+            ml.slog(f"{device.name} removed from registry")
     else:
         ml.elog(f"No socket available for {device.name} to send STOP command.")
 
@@ -358,6 +365,9 @@ def setControl(device: SensorMonitor, controlName: str, controlState: str,) -> N
 
         except Exception as e:
             ml.elog(f"Error sending {command} command to {device.name}: {e}")
+            _removed = deviceRegistry.pop(device.name)
+            ml.slog(f"{device.name} removed from registry.")
+
     else:
         ml.elog(f"No socket available for {device.name} to send {command} command.")
 
